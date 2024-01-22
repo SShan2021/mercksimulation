@@ -1,0 +1,18 @@
+Package: mercksimulation
+Title: Perform simulations for drug interaction data using both lasso and network approaches.
+Version: 1.0.0.0
+Authors@R:
+    person("Sophie", "Shan", , "sophshan@unc.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Depends:
+    R (>= 3.5.0)
+Imports:
+    tidyverse,
+    caret,
+    glmnet
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.0
