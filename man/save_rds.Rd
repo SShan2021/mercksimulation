@@ -2,13 +2,28 @@
 % Please edit documentation in R/save_rds.R
 \name{save_rds}
 \alias{save_rds}
-\title{Title}
+\title{Save RData Objects}
 \usage{
-save_rds(df, model, n_rep, sample_size)
+save_rds(simulation_output, parameter_list, model, n_rep, location)
 }
 \arguments{
-\item{negative}{}
+\item{simulation_output}{The list object returned by the simulation_function.}
+
+\item{parameter_list}{The vector of parameters specifying beta values.}
+
+\item{model}{The scenario that we're running}
+
+\item{n_rep}{The number of repetitions per simulation that we're running.}
+
+\item{location}{The directory to save the objects to.}
 }
 \description{
-Summary
+Take in the output from the simulation_function and
+save it to the location specified.
+}
+\examples{
+save_rds(simulation_output, location = "/work/users/s/o/sophshan/")
+
+
+
 }

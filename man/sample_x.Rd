@@ -2,13 +2,24 @@
 % Please edit documentation in R/sample_x.R
 \name{sample_x}
 \alias{sample_x}
-\title{Title}
+\title{Sample predictor values from dataset}
 \usage{
 sample_x(df, n)
 }
 \arguments{
-\item{negative}{}
+\item{df}{The dataset you want to sample from.}
+
+\item{n}{The number of rows you want in your sample.}
+}
+\value{
+A dataframe of rows from the original dataset.
 }
 \description{
-Summary
+Sample n rows with replacement from the dataset
+}
+\examples{
+data_x <- sample_x(data, 1000)
+
+
+
 }

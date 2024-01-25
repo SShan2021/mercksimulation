@@ -2,13 +2,23 @@
 % Please edit documentation in R/lasso_function.R
 \name{lasso_function}
 \alias{lasso_function}
-\title{Title}
+\title{Model Selection Using Lasso}
 \usage{
-lasso_function(x, y, family.value = "binomial", alpha.value = 1)
+lasso_function(df, family.value = "binomial", alpha.value = 1)
 }
 \arguments{
-\item{negative}{}
+\item{df}{The dataset with the predictors and outcome.}
+
+\item{family.value}{Specifies the family for running the lasso model.
+The default is family.value = "binomial".}
+
+\item{alpha.value}{Specifies the default value for alpha in running
+the lasso model.}
+}
+\value{
+Returns the coefficient dataframe for the dataset.
 }
 \description{
-Summary
+Takes in the generated dataset and fits a lasso model using
+cross-validation.
 }

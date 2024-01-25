@@ -2,13 +2,31 @@
 % Please edit documentation in R/simulation_function.R
 \name{simulation_function}
 \alias{simulation_function}
-\title{Title}
+\title{Performs n simulations and model generation.}
 \usage{
-simulation_function(df, beta, formula, n_rep, sample_size)
+simulation_function(df, parameter_list, n_rep)
 }
 \arguments{
-\item{negative}{}
+\item{df}{The original dataset.}
+
+\item{parameter_list}{The vector of parameters specifying beta values and n samples.}
+
+\item{n_rep}{The number of simulations to run per scenario.}
+}
+\value{
+a list with the following elements:
+\itemize{
+\item{coefficients}
+\item{validation}
+}
 }
 \description{
-Summary
+Takes in the original dataset and list of parameters and
+perform n simulations as specified in the list of parameters.
+}
+\examples{
+simulation_function(df = simulation, parameter_list = grid[1,])
+
+
+
 }

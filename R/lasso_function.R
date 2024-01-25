@@ -1,17 +1,27 @@
-############################
-#Performs LASSO regression
-############################
+#' Model Selection Using Lasso
+#'
+#' Takes in the generated dataset and fits a lasso model using
+#' cross-validation.
+#'
+#' @param df The dataset with the predictors and outcome.
+#' @param family.value Specifies the family for running the lasso model.
+#' The default is family.value = "binomial".
+#' @param alpha.value Specifies the default value for alpha in running
+#' the lasso model.
+#'
+#' @return
+#' Returns the coefficient dataframe for the dataset.
+#' @examples
+#'
+#'
+#'
+#'
+#' @export
+lasso_function <- function(df, family.value = "binomial", alpha.value = 1){
 
-#input: x, y, family, alpha
-#output: dataframe of coefficients of best model
-
-lasso_function <- function(x, #dataframe of covariates
-                           y, #vector of outcomes
-                           family.value = "binomial", #specify the default family
-                           #to be binomial
-                           alpha.value = 1 #specify the default alpha
-                           #to be 1
-){
+  #extract the covariates and outcomes
+  x <- subset(df, select = -AE)
+  y <- subset(df, select = AE)
 
   #create a data matrix from the dataframe of covariates
   input = data.matrix(x)

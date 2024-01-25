@@ -2,13 +2,24 @@
 % Please edit documentation in R/simulate_data.R
 \name{simulate_data}
 \alias{simulate_data}
-\title{Title}
+\title{Simulate Data}
 \usage{
-simulate_data(df, n, parameter_list, beta_zero = 0, check_beta = "no")
+simulate_data(df, parameter_list, beta_zero = 0)
 }
 \arguments{
-\item{negative}{}
+\item{df}{The original dataset.}
+
+\item{parameter_list}{A vector of values specifying size and betas for simulated dataset.}
+
+\item{beta_zero}{The intercept variables (default is beta_zero = 0).}
 }
 \description{
-Summary
+Takes in the original dataset and the parameter list and outputs a
+simulated dataset.
+}
+\examples{
+p <- simulate_data(data, 1000, grid[10,])
+
+
+
 }

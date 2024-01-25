@@ -2,13 +2,25 @@
 % Please edit documentation in R/adjust_beta_zero.R
 \name{adjust_beta_zero}
 \alias{adjust_beta_zero}
-\title{Title}
+\title{Adjust Beta Zero}
 \usage{
 adjust_beta_zero(df_original, df_generated)
 }
 \arguments{
-\item{negative}{}
+\item{df_original}{The original sampled dataset with the AE outcome.}
+
+\item{df_generated}{The generate y outcome.}
+}
+\value{
+a value for adjust_beta_zero
 }
 \description{
-Summary
+Adjust beta zero so that the proportion of AE for the original dataset matches
+the number of AEs in the generated outcome.
+}
+\examples{
+new_beta_zero <- adjust_beta_zero(data_x, data_y)
+
+
+
 }
