@@ -19,7 +19,7 @@ validation_function <- function(parameter_list, simulation_list){
   #########################################
   #make the parameter_list into a dataframe
   #########################################
-  parameter_list <- as.data.frame(t(subset(parameter, select = -n_total)))
+  parameter_list <- as.data.frame(t(subset(parameter_list, select = -n_total)))
   parameter_list$DRUG <- rownames(parameter_list)
   colnames(parameter_list) <- c("COEF", "DRUG")
   rownames(parameter_list) <- 1:dim(parameter_list)[1]
