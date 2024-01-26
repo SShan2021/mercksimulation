@@ -22,12 +22,7 @@ save_rds <- function(simulation_output, parameter_list, model, n_rep, location){
   #extract the n_rep from the parameter_list
   n_rep <- parameter_list$n_total
 
-  #bind together the outputs
-  validation_rbind <- do.call(rbind, simulation_output$validation)
-
   #save the files
-  save(simulation_output$coefficients, file=paste(location, model, "/", "coefficients_", model, "_rep", n_rep, "_n",
+  save(simulation_output, file=paste(location, model, "/", "output_", model, "_rep", n_rep, "_n",
                                       sample_size, ".RData", sep=""))
-  save(validation_rbind, file=paste(location, model, "/", "validation_", model, "_rep", n_rep, "_n",
-                                sample_size, ".RData", sep=""))
 }
