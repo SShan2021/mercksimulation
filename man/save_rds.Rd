@@ -22,7 +22,7 @@ Take in the output from the simulation_function and
 save it to the location specified.
 }
 \examples{
-save_rds(simulation_output, location = "/work/users/s/o/sophshan/")
+save_rds(simulation_output, location = "/work/users/s/o/sophshan/simulation_sc12_n1000/results_sim/")
 
 
 
