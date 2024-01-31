@@ -34,7 +34,7 @@ validation_function <- function(parameter_list, simulation_list){
   #left bind the beta simulated to the beta real
   #########################################
   beta <- parameter_list %>%
-    left_join(simulation_list, by = "DRUG")
+    full_join(simulation_list, by = "DRUG")
   colnames(beta) <- c("COEF.PAR", "DRUG", "COEF.SIM")
 
   #########################################
