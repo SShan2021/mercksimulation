@@ -7,7 +7,7 @@
 #' @param parameter_list A vector of values specifying size and betas for simulated dataset.
 #' @param beta_zero The intercept variables (default is beta_zero = 0).
 #'
-#' @return
+#' @return A simulated dataset with the prespecified betas. 
 #'
 #' @examples
 #' p <- simulate_data(data, 1000, grid[10,])

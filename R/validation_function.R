@@ -6,10 +6,11 @@
 #' @param parameter_list The vector of parameters specifying beta values.
 #' @param simulation_list The vector of parameters from the simulation
 #'
-#' @return
+#' @return A list object with mse, specificity, and sensitivity.
 #'
 #' @examples
-#'
+#' validation_function(parameter_list = grid[7,],
+#' simulation_list = output_model7_rep1000_n500.RData$coefficients[[100]])
 #'
 #'
 #'

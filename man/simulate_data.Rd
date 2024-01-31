@@ -13,6 +13,9 @@ simulate_data(df, parameter_list, beta_zero = 0)
 
 \item{beta_zero}{The intercept variables (default is beta_zero = 0).}
 }
+\value{
+A simulated dataset with the prespecified betas.
+}
 \description{
 Takes in the original dataset and the parameter list and outputs a
 simulated dataset.

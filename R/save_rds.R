@@ -9,7 +9,7 @@
 #' @param n_rep The number of repetitions per simulation that we're running.
 #' @param location The directory to save the objects to.
 #'
-#' @return
+#' @return N/A
 #'
 #' @examples
 #' save_rds(simulation_output, location = "/work/users/s/o/sophshan/simulation_sc12_n1000/results_sim/")

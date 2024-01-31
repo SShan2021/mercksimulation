@@ -22,3 +22,11 @@ Returns the coefficient dataframe for the dataset.
 Takes in the generated dataset and fits a lasso model using
 cross-validation.
 }
+\examples{
+lasso_function(df, family.value = "binomial",
+alpha.value = 1)
+
+
+
+
+}

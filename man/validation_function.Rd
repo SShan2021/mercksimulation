@@ -11,7 +11,17 @@ validation_function(parameter_list, simulation_list)
 
 \item{simulation_list}{The vector of parameters from the simulation}
 }
+\value{
+A list object with mse, specificity, and sensitivity.
+}
 \description{
 Takes in the prespecified parameter vector and compares it
 to the simulated one using mean squared error.
+}
+\examples{
+validation_function(parameter_list = grid[7,],
+simulation_list = output_model7_rep1000_n500.RData$coefficients[[100]])
+
+
+
 }

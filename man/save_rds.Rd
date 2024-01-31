@@ -17,6 +17,9 @@ save_rds(simulation_output, parameter_list, model, n_rep, location)
 
 \item{location}{The directory to save the objects to.}
 }
+\value{
+N/A
+}
 \description{
 Take in the output from the simulation_function and
 save it to the location specified.

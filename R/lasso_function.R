@@ -11,7 +11,9 @@
 #'
 #' @return
 #' Returns the coefficient dataframe for the dataset.
-#' @examples
+#'
+#' @examples lasso_function(df, family.value = "binomial",
+#' alpha.value = 1)
 #'
 #'
 #'
