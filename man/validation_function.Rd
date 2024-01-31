@@ -4,12 +4,14 @@
 \alias{validation_function}
 \title{Compute the MSE & Sensitivity & Specificity of the simulation.}
 \usage{
-validation_function(parameter_list, simulation_list)
+validation_function(parameter_list, simulation_list, beta_num)
 }
 \arguments{
 \item{parameter_list}{The vector of parameters specifying beta values.}
 
 \item{simulation_list}{The vector of parameters from the simulation}
+
+\item{beta_num}{The total number of possible beta in the sample.}
 }
 \value{
 A list object with mse, specificity, and sensitivity.

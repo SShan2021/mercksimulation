@@ -5,6 +5,7 @@
 #'
 #' @param parameter_list The vector of parameters specifying beta values.
 #' @param simulation_list The vector of parameters from the simulation
+#' @param beta_num The total number of possible beta in the sample.
 #'
 #' @return A list object with mse, specificity, and sensitivity.
 #'
@@ -15,7 +16,7 @@
 #'
 #'
 #' @export
-validation_function <- function(parameter_list, simulation_list){
+validation_function <- function(parameter_list, simulation_list, beta_num){
 
   #########################################
   #make the parameter_list into a dataframe
@@ -32,7 +33,12 @@ validation_function <- function(parameter_list, simulation_list){
   simulation_list$COEF <- as.numeric(simulation_list$COEF)
 
   #########################################
-  #left bind the beta simulated to the beta real
+  #remove the intercept
+  #########################################
+  simulation_list <- simulation_list[!(simulation_list$DRUG == "(Intercept)"), ]
+
+  #########################################
+  #full bind the beta simulated to the beta real
   #########################################
   beta <- parameter_list %>%
     full_join(simulation_list, by = "DRUG")
@@ -54,15 +60,15 @@ validation_function <- function(parameter_list, simulation_list){
   #########################################
   #calculate specificity
   #########################################
-  #how many times does parameter_list == 0
-  denom_spec <- sum(ifelse(beta[,"COEF.PAR"] == 0, 1, 0))
+  #how many times does parameter_list != 0
+  denom_spec <- beta_num - sum(ifelse(beta[,"COEF.PAR"] != 0, 1, 0))
 
   #how many times does simulated beta != 0 but parameter_list == 0
-  num_spec <- sum(ifelse(beta[,"COEF.PAR"] == 0 & beta[,"COEF.SIM"] != 0, 1, 0))
+  num_spec <- denom_spec - sum(ifelse(beta[,"COEF.PAR"] == 0 & beta[,"COEF.SIM"] != 0, 1, 0))
 
   #calculate specificity
   if(denom_spec != 0) {
-    specificity <- 1 - num_spec/denom_spec
+    specificity <- num_spec/denom_spec
   }
   else{
     specificity = 1
