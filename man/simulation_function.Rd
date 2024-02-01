@@ -4,7 +4,7 @@
 \alias{simulation_function}
 \title{Performs n simulations and model generation.}
 \usage{
-simulation_function(df, parameter_list, n_rep)
+simulation_function(df, parameter_list, n_rep, beta_num)
 }
 \arguments{
 \item{df}{The original dataset.}
@@ -12,6 +12,8 @@ simulation_function(df, parameter_list, n_rep)
 \item{parameter_list}{The vector of parameters specifying beta values and n samples.}
 
 \item{n_rep}{The number of simulations to run per scenario.}
+
+\item{beta_num}{The number of total possible betas in the dataset.}
 }
 \value{
 a list with the following elements:

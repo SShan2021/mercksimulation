@@ -6,6 +6,7 @@
 #' @param df The original dataset.
 #' @param parameter_list The vector of parameters specifying beta values and n samples.
 #' @param n_rep The number of simulations to run per scenario.
+#' @param beta_num The number of total possible betas in the dataset.
 #'
 #' @return a list with the following elements:
 #' \itemize{
@@ -19,7 +20,7 @@
 #'
 #'
 #' @export
-simulation_function <- function(df, parameter_list, n_rep){
+simulation_function <- function(df, parameter_list, n_rep, beta_num){
 
   #initializes the list object:
   coefficient_rep <- list()     #create list for storing the betas
@@ -48,7 +49,8 @@ simulation_function <- function(df, parameter_list, n_rep){
 
       #find the validation values
       model_validate <- validation_function(parameter_list = parameter_list,
-                                            simulation_list = model)
+                                            simulation_list = model,
+                                            beta_num = beta_num)
 
       #save the outputs
       coefficient_rep[[i]] <- model

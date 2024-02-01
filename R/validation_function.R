@@ -77,7 +77,7 @@ validation_function <- function(parameter_list, simulation_list, beta_num){
   #########################################
   #calculate sensitivity
   #########################################
-  #how many times does parameter_list != 0
+  #how parameters specified in the model
   denom_sen <- sum(ifelse(beta[,"COEF.PAR"] != 0, 1, 0))
 
   #how many times do both simulated beta and parameter_list != 0
