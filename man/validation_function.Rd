@@ -4,9 +4,11 @@
 \alias{validation_function}
 \title{Compute the MSE & Sensitivity & Specificity of the simulation.}
 \usage{
-validation_function(parameter_list, simulation_list, beta_num)
+validation_function(df, parameter_list, simulation_list, beta_num)
 }
 \arguments{
+\item{df}{The dataset with the predictors and outcome.}
+
 \item{parameter_list}{The vector of parameters specifying beta values.}
 
 \item{simulation_list}{The vector of parameters from the simulation}

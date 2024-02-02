@@ -3,6 +3,7 @@
 #' Takes in the prespecified parameter vector and compares it
 #' to the simulated one using mean squared error.
 #'
+#' @param df The dataset with the predictors and outcome.
 #' @param parameter_list The vector of parameters specifying beta values.
 #' @param simulation_list The vector of parameters from the simulation
 #' @param beta_num The total number of possible beta in the sample.
@@ -16,7 +17,7 @@
 #'
 #'
 #' @export
-validation_function <- function(parameter_list, simulation_list, beta_num){
+validation_function <- function(df, parameter_list, simulation_list, beta_num){
 
   #########################################
   #make the parameter_list into a dataframe
@@ -58,19 +59,54 @@ validation_function <- function(parameter_list, simulation_list, beta_num){
   mse <- mean((beta[,"COEF.PAR"] - beta[,"COEF.SIM"])^2)
 
   #########################################
+  #refit the model using the beta_simulated
+  #########################################
+  #extract the covariates and outcomes
+  x <- subset(df, select = -AE)
+  y <- subset(df, select = AE)
+
+  keep_X <- simulation_list$DRUG #extract the column names from the simulation
+  keep_X <- keep_X[!keep_X == "(Intercept)"]
+  x <- x[,keep_X] #extract the columns from the beta simulated
+  new_data <- cbind(x, y)
+  new_outcome <- coef(summary(glm(AE ~ ., data = new_data, family = "binomial"))) %>%
+    as.data.frame()
+
+  # Filter for significant coefficients (p-value < 0.05)
+  significant_coefficients <- new_outcome %>%
+    filter(`Pr(>|z|)` < 0.05) %>%
+    rownames_to_column(var = "DRUG") %>%
+    select(DRUG, COEF = Estimate) %>%
+    filter(!(DRUG == "(Intercept)")) #get rid of the intercept
+
+  #########################################
+  #full-bind the significant beta to the real beta
+  #########################################
+  beta_v1 <- parameter_list %>%
+    full_join(significant_coefficients, by = "DRUG")
+  colnames(beta_v1) <- c("COEF.PAR", "DRUG", "COEF.SIM")
+
+  #########################################
+  #fill in the NA with 0
+  #########################################
+  beta_v1 <- beta_v1 %>%
+    mutate_all(~ifelse(is.na(.),
+                       0,
+                       .))
+
+  #########################################
   #calculate specificity
   #########################################
   #how many times does parameter_list != 0
-  denom_spec <- beta_num - sum(ifelse(beta[,"COEF.PAR"] != 0, 1, 0))
+  denom_spec <- beta_num - sum(ifelse(beta_v1[,"COEF.PAR"] != 0, 1, 0))
 
   #how many times does simulated beta != 0 but parameter_list == 0
-  num_spec <- denom_spec - sum(ifelse(beta[,"COEF.PAR"] == 0 & beta[,"COEF.SIM"] != 0, 1, 0))
+  num_spec <- denom_spec - sum(ifelse(beta_v1[,"COEF.PAR"] == 0 & beta_v1[,"COEF.SIM"] != 0, 1, 0))
 
   #calculate specificity
   if(denom_spec != 0) {
     specificity <- num_spec/denom_spec
-  }
-  else{
+  } else{
     specificity = 1
   }
 
@@ -78,16 +114,15 @@ validation_function <- function(parameter_list, simulation_list, beta_num){
   #calculate sensitivity
   #########################################
   #how parameters specified in the model
-  denom_sen <- sum(ifelse(beta[,"COEF.PAR"] != 0, 1, 0))
+  denom_sen <- sum(ifelse(beta_v1[,"COEF.PAR"] != 0, 1, 0))
 
   #how many times do both simulated beta and parameter_list != 0
-  num_sen <- sum(ifelse(beta[,"COEF.PAR"] != 0 & beta[,"COEF.SIM"] != 0, 1, 0))
+  num_sen <- sum(ifelse(beta_v1[,"COEF.PAR"] != 0 & beta_v1[,"COEF.SIM"] != 0, 1, 0))
 
   #calculate sensitivity
   if(denom_sen != 0) {
     sensitivity <- num_sen/denom_sen
-  }
-  else{
+  } else{
     sensitivity = 1
   }
 

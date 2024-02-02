@@ -48,7 +48,8 @@ simulation_function <- function(df, parameter_list, n_rep, beta_num){
       model <- lasso_function(df = gendata)
 
       #find the validation values
-      model_validate <- validation_function(parameter_list = parameter_list,
+      model_validate <- validation_function(df = gendata,
+                                            parameter_list = parameter_list,
                                             simulation_list = model,
                                             beta_num = beta_num)
 
