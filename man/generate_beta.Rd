@@ -4,12 +4,16 @@
 \alias{generate_beta}
 \title{Generate a random beta vector}
 \usage{
-generate_beta(length_zero, length_value)
+generate_beta(length_zero, length_value, min, max)
 }
 \arguments{
 \item{length_zero}{How models you want withOUT that variable as a predictor.}
 
 \item{length_value}{How models you want WITH that variable as a predictor.}
+
+\item{min}{The minimum value for generation}
+
+\item{max}{The maximum value for generation}
 }
 \value{
 A vector of values for the variable.
@@ -19,7 +23,8 @@ Generate a random beta vector for input into the grid function.
 Specify the number of zeros, and the number of parameters you want.
 }
 \examples{
-TXGROUP.X <- generate_beta(length_zero = 3, length_value = 9)
+TXGROUP.X <- generate_beta(length_zero = 3, length_value = 9,
+                           min = -1, max = 1)
 
 
 
