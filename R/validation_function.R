@@ -123,7 +123,7 @@ validation_function <- function(df, parameter_list, simulation_list, beta_num){
   if(denom_sen != 0) {
     sensitivity <- num_sen/denom_sen
   } else{
-    sensitivity = 1
+    sensitivity = 0
   }
 
 
