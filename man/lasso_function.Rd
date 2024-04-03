@@ -4,13 +4,21 @@
 \alias{lasso_function}
 \title{Model Selection Using Lasso}
 \usage{
-lasso_function(df, family.value = "binomial", alpha.value = 1)
+lasso_function(
+  df,
+  family.value = "binomial",
+  lasso.value = "lambda.min",
+  alpha.value = 1
+)
 }
 \arguments{
 \item{df}{The dataset with the predictors and outcome.}
 
 \item{family.value}{Specifies the family for running the lasso model.
 The default is family.value = "binomial".}
+
+\item{lasso.value}{Specifies which lambda you want to use: lambda.min or lambda.1se.
+The default is lasso.value = "lambda.min"}
 
 \item{alpha.value}{Specifies the default value for alpha in running
 the lasso model.}

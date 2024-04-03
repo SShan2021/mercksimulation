@@ -4,7 +4,13 @@
 \alias{simulation_function}
 \title{Performs n simulations and model generation.}
 \usage{
-simulation_function(df, parameter_list, n_rep, beta_num)
+simulation_function(
+  df,
+  parameter_list,
+  n_rep,
+  beta_num,
+  lasso.value = "lambda.min"
+)
 }
 \arguments{
 \item{df}{The original dataset.}
@@ -14,6 +20,9 @@ simulation_function(df, parameter_list, n_rep, beta_num)
 \item{n_rep}{The number of simulations to run per scenario.}
 
 \item{beta_num}{The number of total possible betas in the dataset.}
+
+\item{lasso.value}{Specifies which lambda you want to use: lambda.min or lambda.1se.
+The default is lasso.value = "lambda.min"}
 }
 \value{
 a list with the following elements:

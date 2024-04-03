@@ -6,6 +6,8 @@
 #' @param df The dataset with the predictors and outcome.
 #' @param family.value Specifies the family for running the lasso model.
 #' The default is family.value = "binomial".
+#' @param lasso.value Specifies which lambda you want to use: lambda.min or lambda.1se.
+#' The default is lasso.value = "lambda.min"
 #' @param alpha.value Specifies the default value for alpha in running
 #' the lasso model.
 #'
@@ -19,7 +21,10 @@
 #'
 #'
 #' @export
-lasso_function <- function(df, family.value = "binomial", alpha.value = 1){
+lasso_function <- function(df,
+                           family.value = "binomial",
+                           lasso.value = "lambda.min",
+                           alpha.value = 1){
 
   #extract the covariates and outcomes
   x <- subset(df, select = -AE)
@@ -37,7 +42,13 @@ lasso_function <- function(df, family.value = "binomial", alpha.value = 1){
                         family = family.value)
 
   #find optimal lambda value that minimizes test MSE
-  best_lambda <- cv_model$lambda.min
+  if(lasso.value == "lambda.min"){
+    best_lambda <- cv_model$lambda.min
+  }
+  else{
+    best_lambda <- cv_model$lambda.1se
+  }
+
 
   #find the best model
   best_model <- glmnet(x = input, y = output, alpha = alpha.value,

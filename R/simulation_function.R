@@ -7,6 +7,8 @@
 #' @param parameter_list The vector of parameters specifying beta values and n samples.
 #' @param n_rep The number of simulations to run per scenario.
 #' @param beta_num The number of total possible betas in the dataset.
+#' @param lasso.value Specifies which lambda you want to use: lambda.min or lambda.1se.
+#' The default is lasso.value = "lambda.min"
 #'
 #' @return a list with the following elements:
 #' \itemize{
@@ -20,7 +22,8 @@
 #'
 #'
 #' @export
-simulation_function <- function(df, parameter_list, n_rep, beta_num){
+simulation_function <- function(df, parameter_list, n_rep, beta_num,
+                                lasso.value = "lambda.min"){
 
   #initializes the list object:
   coefficient_rep <- list()     #create list for storing the betas
@@ -45,7 +48,8 @@ simulation_function <- function(df, parameter_list, n_rep, beta_num){
                                beta_zero = beta_zero)
 
       #perform LASSO variable selection on the betas
-      model <- lasso_function(df = gendata)
+      model <- lasso_function(df = gendata,
+                              lasso.value = lasso.value)
 
       #find the validation values
       model_validate <- validation_function(df = gendata,
