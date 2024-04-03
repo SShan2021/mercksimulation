@@ -7,6 +7,7 @@
 #' @param parameter_list The vector of parameters specifying beta values.
 #' @param simulation_list The vector of parameters from the simulation
 #' @param beta_num The total number of possible beta in the sample.
+#' @param cutoff The cutoff to consider coefficients to put into the final model.
 #'
 #' @return A list object with mse, specificity, and sensitivity.
 #'
@@ -17,7 +18,11 @@
 #'
 #'
 #' @export
-validation_function <- function(df, parameter_list, simulation_list, beta_num){
+validation_function <- function(df,
+                                parameter_list,
+                                simulation_list,
+                                beta_num,
+                                cutoff = NULL){
 
   #########################################
   #make the parameter_list into a dataframe
@@ -34,9 +39,11 @@ validation_function <- function(df, parameter_list, simulation_list, beta_num){
   simulation_list$COEF <- as.numeric(simulation_list$COEF)
 
   #########################################
-  #remove the intercept
+  #remove the intercept and any coefficient below the cutoff
   #########################################
   simulation_list <- simulation_list[!(simulation_list$DRUG == "(Intercept)"), ]
+  if(!is.null(cutoff)){
+    simulation_list <- simulation_list[!(simulation_list$COEF < cutoff), ]}
 
   #########################################
   #full bind the beta simulated to the beta real

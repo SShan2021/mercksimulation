@@ -9,7 +9,8 @@ simulation_function(
   parameter_list,
   n_rep,
   beta_num,
-  lasso.value = "lambda.min"
+  lasso.value = "lambda.min",
+  cutoff = NULL
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ simulation_function(
 
 \item{lasso.value}{Specifies which lambda you want to use: lambda.min or lambda.1se.
 The default is lasso.value = "lambda.min"}
+
+\item{cutoff}{The cutoff to consider coefficients to put into the final model.}
 }
 \value{
 a list with the following elements:

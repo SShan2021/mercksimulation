@@ -4,7 +4,13 @@
 \alias{validation_function}
 \title{Compute the MSE & Sensitivity & Specificity of the simulation.}
 \usage{
-validation_function(df, parameter_list, simulation_list, beta_num)
+validation_function(
+  df,
+  parameter_list,
+  simulation_list,
+  beta_num,
+  cutoff = NULL
+)
 }
 \arguments{
 \item{df}{The dataset with the predictors and outcome.}
@@ -14,6 +20,8 @@ validation_function(df, parameter_list, simulation_list, beta_num)
 \item{simulation_list}{The vector of parameters from the simulation}
 
 \item{beta_num}{The total number of possible beta in the sample.}
+
+\item{cutoff}{The cutoff to consider coefficients to put into the final model.}
 }
 \value{
 A list object with mse, specificity, and sensitivity.

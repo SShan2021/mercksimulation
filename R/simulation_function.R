@@ -9,6 +9,7 @@
 #' @param beta_num The number of total possible betas in the dataset.
 #' @param lasso.value Specifies which lambda you want to use: lambda.min or lambda.1se.
 #' The default is lasso.value = "lambda.min"
+#' @param cutoff The cutoff to consider coefficients to put into the final model.
 #'
 #' @return a list with the following elements:
 #' \itemize{
@@ -22,8 +23,12 @@
 #'
 #'
 #' @export
-simulation_function <- function(df, parameter_list, n_rep, beta_num,
-                                lasso.value = "lambda.min"){
+simulation_function <- function(df,
+                                parameter_list,
+                                n_rep,
+                                beta_num,
+                                lasso.value = "lambda.min",
+                                cutoff = NULL){
 
   #initializes the list object:
   coefficient_rep <- list()     #create list for storing the betas
@@ -55,7 +60,8 @@ simulation_function <- function(df, parameter_list, n_rep, beta_num,
       model_validate <- validation_function(df = gendata,
                                             parameter_list = parameter_list,
                                             simulation_list = model,
-                                            beta_num = beta_num)
+                                            beta_num = beta_num,
+                                            cutoff = cutoff)
 
       #save the outputs
       coefficient_rep[[i]] <- model
