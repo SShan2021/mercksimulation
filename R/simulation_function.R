@@ -10,6 +10,7 @@
 #' @param replace Whether you want to sample with or without replacement.
 #' Default is replace = TRUE.
 #' @param iterations Number of iterations to run BKMR model. Default is 10000.
+#' @param inclusion The % for inclusion for posterior inclusion probability. Default is 0.5
 #'
 #'
 #' @return a list with the following elements:
@@ -29,7 +30,8 @@ simulation_function <- function(df,
                                 n_rep,
                                 beta_num,
                                 replace = TRUE,
-                                iterations = 10000){
+                                iterations = 10000,
+                                inclusion = 0.5){
 
   #initializes the list object:
   coefficient_rep_LASSO <- list()     #create list for storing the betas
@@ -69,7 +71,8 @@ simulation_function <- function(df,
 
       #perform BKMR variabl selection on the betas
       model3 <- bkmr(df = gendata,
-                     iterations = iterations)
+                     iterations = iterations,
+                     inclusion = inclusion)
 
       #find the validation values
       model_validate_1 <- validation_function(df = gendata,
