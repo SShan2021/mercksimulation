@@ -9,8 +9,8 @@ simulation_function(
   parameter_list,
   n_rep,
   beta_num,
-  lasso.value = "lambda.min",
-  cutoff = NULL
+  replace = TRUE,
+  iterations = 10000
 )
 }
 \arguments{
@@ -22,10 +22,10 @@ simulation_function(
 
 \item{beta_num}{The number of total possible betas in the dataset.}
 
-\item{lasso.value}{Specifies which lambda you want to use: lambda.min or lambda.1se.
-The default is lasso.value = "lambda.min"}
+\item{replace}{Whether you want to sample with or without replacement.
+Default is replace = TRUE.}
 
-\item{cutoff}{The cutoff to consider coefficients to put into the final model.}
+\item{iterations}{Number of iterations to run BKMR model. Default is 10000.}
 }
 \value{
 a list with the following elements:

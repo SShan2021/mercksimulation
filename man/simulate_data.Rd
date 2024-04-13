@@ -4,7 +4,7 @@
 \alias{simulate_data}
 \title{Simulate Data}
 \usage{
-simulate_data(df, parameter_list, beta_zero = 0)
+simulate_data(df, parameter_list, beta_zero = 0, replace = TRUE)
 }
 \arguments{
 \item{df}{The original dataset.}
@@ -12,6 +12,9 @@ simulate_data(df, parameter_list, beta_zero = 0)
 \item{parameter_list}{A vector of values specifying size and betas for simulated dataset.}
 
 \item{beta_zero}{The intercept variables (default is beta_zero = 0).}
+
+\item{replace}{Whether you want to sample with or without replacement.
+Default is replace = TRUE.}
 }
 \value{
 A simulated dataset with the prespecified betas.

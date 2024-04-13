@@ -7,9 +7,10 @@
 #' @param parameter_list The vector of parameters specifying beta values and n samples.
 #' @param n_rep The number of simulations to run per scenario.
 #' @param beta_num The number of total possible betas in the dataset.
-#' @param lasso.value Specifies which lambda you want to use: lambda.min or lambda.1se.
-#' The default is lasso.value = "lambda.min"
-#' @param cutoff The cutoff to consider coefficients to put into the final model.
+#' @param replace Whether you want to sample with or without replacement.
+#' Default is replace = TRUE.
+#' @param iterations Number of iterations to run BKMR model. Default is 10000.
+#'
 #'
 #' @return a list with the following elements:
 #' \itemize{
@@ -27,18 +28,23 @@ simulation_function <- function(df,
                                 parameter_list,
                                 n_rep,
                                 beta_num,
-                                lasso.value = "lambda.min",
-                                cutoff = NULL){
+                                replace = TRUE,
+                                iterations = 10000){
 
   #initializes the list object:
-  coefficient_rep <- list()     #create list for storing the betas
-  validation_rep <- list()   #create list for storing validation values
+  coefficient_rep_LASSO <- list()     #create list for storing the betas
+  coefficient_rep_ELASTIC <- list()
+  coefficient_rep_BKMR <- list()
+
+  validation_rep_LASSO <- list()   #create list for storing validation values
+  validation_rep_ELASTIC <- list()
+  validation_rep_BKMR <- list()
 
   #number of samples
   n <- parameter_list$n_total
 
   #specify the intercept parameter
-   x <- sample_x(df, n)
+   x <- sample_x(df, n, replace = FALSE)
    y <- sample_y(x, parameter_list, beta_zero = 0)
    beta_zero <- adjust_beta_zero(x, y)
 
@@ -50,23 +56,47 @@ simulation_function <- function(df,
       #generate the data
       gendata <- simulate_data(df = df,
                                parameter_list = parameter_list,
-                               beta_zero = beta_zero)
+                               beta_zero = beta_zero,
+                               replace = FALSE)
 
       #perform LASSO variable selection on the betas
-      model <- lasso_function(df = gendata,
-                              lasso.value = lasso.value)
+      model1 <- penalized_regression(df = gendata,
+                                     model.type = "lasso")
+
+      #perform Elastic Net variable selection on the betas
+      model2 <- penalized_regression(df = gendata,
+                                     model.type = "elastic net")
+
+      #perform BKMR variabl selection on the betas
+      model3 <- bkmr(df = gendata,
+                     iterations = iterations)
 
       #find the validation values
-      model_validate <- validation_function(df = gendata,
+      model_validate_1 <- validation_function(df = gendata,
                                             parameter_list = parameter_list,
-                                            simulation_list = model,
-                                            beta_num = beta_num,
-                                            cutoff = cutoff)
+                                            simulation_list = model1,
+                                            beta_num = beta_num)
+
+      model_validate_2 <- validation_function(df = gendata,
+                                              parameter_list = parameter_list,
+                                              simulation_list = model2,
+                                              beta_num = beta_num)
+
+      model_validate_3 <- validation_function(df = gendata,
+                                              parameter_list = parameter_list,
+                                              simulation_list = model3,
+                                              beta_num = beta_num,
+                                              MSE = "not")
+
 
       #save the outputs
-      coefficient_rep[[i]] <- model
-      validation_rep[[i]] <- model_validate
+      coefficient_rep_LASSO[[i]] <- model1
+      coefficient_rep_ELASTIC[[i]] <- model2
+      coefficient_rep_BKMR[[i]] <- model3
 
+      validation_rep_LASSO[[i]] <- model_validate_1
+      validation_rep_ELASTIC[[i]] <- model_validate_2
+      validation_rep_BKMR[[i]] <- model_validate_3
 
       #keep count
       print(paste0("I finished ", i))
@@ -85,6 +115,10 @@ simulation_function <- function(df,
   }
 
   # Return a list of results
-  return(list("coefficients" = coefficient_rep,
-              "validation" = validation_rep))
+  return(list("coefficients_LASSO" = coefficient_rep_LASSO,
+              "coefficients_ELASTIC" = coefficient_rep_ELASTIC,
+              "coefficients_coefficient_rep_BKMR" = coefficient_rep_BKMR,
+              "validation_LASSO" = validation_rep_LASSO,
+              "validation_ELASTIC" = validation_rep_ELASTIC,
+              "validation_BKMR" = validation_rep_BKMR))
 }

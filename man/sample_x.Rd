@@ -4,18 +4,21 @@
 \alias{sample_x}
 \title{Sample predictor values from dataset}
 \usage{
-sample_x(df, n)
+sample_x(df, n, replace = TRUE)
 }
 \arguments{
 \item{df}{The dataset you want to sample from.}
 
 \item{n}{The number of rows you want in your sample.}
+
+\item{replace}{Whether you want to sample with or without replacement.
+Default is replace = TRUE.}
 }
 \value{
 A dataframe of rows from the original dataset.
 }
 \description{
-Sample n rows with replacement from the dataset
+Sample n rows with/without replacement from the dataset
 }
 \examples{
 data_x <- sample_x(data, 1000)

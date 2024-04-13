@@ -9,7 +9,7 @@ validation_function(
   parameter_list,
   simulation_list,
   beta_num,
-  cutoff = NULL
+  MSE = "include"
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ validation_function(
 
 \item{beta_num}{The total number of possible beta in the sample.}
 
-\item{cutoff}{The cutoff to consider coefficients to put into the final model.}
+\item{MSE}{Whether to include MSE or not.}
 }
 \value{
 A list object with mse, specificity, and sensitivity.

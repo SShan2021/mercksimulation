@@ -7,7 +7,7 @@
 #' @param parameter_list The vector of parameters specifying beta values.
 #' @param simulation_list The vector of parameters from the simulation
 #' @param beta_num The total number of possible beta in the sample.
-#' @param cutoff The cutoff to consider coefficients to put into the final model.
+#' @param MSE Whether to include MSE or not.
 #'
 #' @return A list object with mse, specificity, and sensitivity.
 #'
@@ -22,7 +22,7 @@ validation_function <- function(df,
                                 parameter_list,
                                 simulation_list,
                                 beta_num,
-                                cutoff = NULL){
+                                MSE = "include"){
 
   #########################################
   #make the parameter_list into a dataframe
@@ -39,11 +39,9 @@ validation_function <- function(df,
   simulation_list$COEF <- as.numeric(simulation_list$COEF)
 
   #########################################
-  #remove the intercept and any coefficient below the cutoff
+  #remove the intercept
   #########################################
   simulation_list <- simulation_list[!(simulation_list$DRUG == "(Intercept)"), ]
-  if(!is.null(cutoff)){
-    simulation_list <- simulation_list[!(simulation_list$COEF < cutoff), ]}
 
   #########################################
   #full bind the beta simulated to the beta real
@@ -63,7 +61,11 @@ validation_function <- function(df,
   #########################################
   #calculate the MSE (beta - beta_hat)^2
   #########################################
-  mse <- mean((beta[,"COEF.PAR"] - beta[,"COEF.SIM"])^2)
+  if(MSE == "include"){
+    mse <- mean((beta[,"COEF.PAR"] - beta[,"COEF.SIM"])^2)
+  } else{
+    mse <- NA
+  }
 
   #########################################
   #refit the model using the beta_simulated
@@ -83,8 +85,22 @@ validation_function <- function(df,
   significant_coefficients <- new_outcome %>%
     filter(`Pr(>|z|)` < 0.05) %>%
     rownames_to_column(var = "DRUG") %>%
-    select(DRUG, COEF = Estimate) %>%
     filter(!(DRUG == "(Intercept)")) #get rid of the intercept
+
+  significant_coefficients <- significant_coefficients[ , c("DRUG", "Estimate")]
+  colnames(significant_coefficients) <- c("DRUG", "COEF")
+
+  #########################################
+  #exclude the non-drug columns in real beta and significant beta
+  #########################################
+  # Define the vector of column names to exclude
+  not_select <- c("n_total", "TXGROUP.4", "TXGROUP.8", "TXGROUP.16",
+                  "SEX.F", "RACE.Black", "RACE.Hispanic", "RACE.Other")
+
+
+  # Subset the data frame to exclude the specified columns and transpose the result
+  parameter_list <- data.frame(parameter_list[!(parameter_list$DRUG %in% not_select), ])
+  significant_coefficients <- data.frame(significant_coefficients[!(significant_coefficients$DRUG %in% not_select), ])
 
   #########################################
   #full-bind the significant beta to the real beta
@@ -101,6 +117,7 @@ validation_function <- function(df,
                        0,
                        .))
 
+  #print(beta_v1)
   #########################################
   #calculate specificity
   #########################################
