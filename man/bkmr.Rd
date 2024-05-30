@@ -4,7 +4,7 @@
 \alias{bkmr}
 \title{Model Selection Using BKMR}
 \usage{
-bkmr(df, family.value = "binomial", iterations = 10000)
+bkmr(df, family.value = "binomial", iterations = 10000, inclusion = 0.5)
 }
 \arguments{
 \item{df}{The dataset with the predictors and outcome.}
@@ -12,6 +12,8 @@ bkmr(df, family.value = "binomial", iterations = 10000)
 \item{family.value}{Default fits a binomial model.}
 
 \item{iterations}{Number of iterations to run BKMR model. Default is 10000.}
+
+\item{inclusion}{The \% for inclusion for posterior inclusion probability. Default is 0.5}
 }
 \value{
 Returns the PIP for the dataset.

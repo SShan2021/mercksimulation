@@ -4,24 +4,14 @@
 \alias{validation_function}
 \title{Compute the MSE & Sensitivity & Specificity of the simulation.}
 \usage{
-validation_function(
-  df,
-  parameter_list,
-  simulation_list,
-  beta_num,
-  MSE = "include"
-)
+validation_function(df, parameter_list, simulation_list)
 }
 \arguments{
 \item{df}{The dataset with the predictors and outcome.}
 
 \item{parameter_list}{The vector of parameters specifying beta values.}
 
-\item{simulation_list}{The vector of parameters from the simulation}
-
-\item{beta_num}{The total number of possible beta in the sample.}
-
-\item{MSE}{Whether to include MSE or not.}
+\item{simulation_list}{The output matrix of parameters from the simulation}
 }
 \value{
 A list object with mse, specificity, and sensitivity.

@@ -10,7 +10,8 @@ simulation_function(
   n_rep,
   beta_num,
   replace = TRUE,
-  iterations = 10000
+  iterations = 10000,
+  inclusion = 0.5
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ simulation_function(
 Default is replace = TRUE.}
 
 \item{iterations}{Number of iterations to run BKMR model. Default is 10000.}
+
+\item{inclusion}{The \% for inclusion for posterior inclusion probability. Default is 0.5}
 }
 \value{
 a list with the following elements:

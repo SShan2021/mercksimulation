@@ -5,9 +5,7 @@
 #'
 #' @param df The dataset with the predictors and outcome.
 #' @param parameter_list The vector of parameters specifying beta values.
-#' @param simulation_list The vector of parameters from the simulation
-#' @param beta_num The total number of possible beta in the sample.
-#' @param MSE Whether to include MSE or not.
+#' @param simulation_list The output matrix of parameters from the simulation
 #'
 #' @return A list object with mse, specificity, and sensitivity.
 #'
@@ -20,9 +18,7 @@
 #' @export
 validation_function <- function(df,
                                 parameter_list,
-                                simulation_list,
-                                beta_num,
-                                MSE = "include"){
+                                simulation_list){
 
   #########################################
   #make the parameter_list into a dataframe
@@ -33,10 +29,12 @@ validation_function <- function(df,
   rownames(parameter_list) <- 1:dim(parameter_list)[1]
 
   #########################################
-  #convert coef data form to be the same for both
+  #make the simulation_list into a dataframe
   #########################################
-  parameter_list$COEF <- as.numeric(parameter_list$COEF)
-  simulation_list$COEF <- as.numeric(simulation_list$COEF)
+  simulation_list <- as.data.frame(as.matrix(simulation_list))
+  simulation_list$DRUG <- rownames(simulation_list)
+  colnames(simulation_list) <- c("COEF", "DRUG")
+  rownames(simulation_list) <- 1:dim(simulation_list)[1]
 
   #########################################
   #remove the intercept
@@ -59,13 +57,24 @@ validation_function <- function(df,
                        .))
 
   #########################################
+  #create another beta dataset with only drugs/drug interactions
+  #########################################
+  beta.subset <- beta %>%
+    filter(!(DRUG %in% c("TXGROUP.4",
+                         "TXGROUP.8",
+                         "TXGROUP.16",
+                         "SEX.F",
+                         "RACE.Black",
+                         "RACE.Hispanic",
+                         "RACE.Other",
+                         "AGE")))
+
+
+  #########################################
   #calculate the MSE (beta - beta_hat)^2
   #########################################
-  if(MSE == "include"){
-    mse <- mean((beta[,"COEF.PAR"] - beta[,"COEF.SIM"])^2)
-  } else{
-    mse <- NA
-  }
+  mse_all <- mean((beta[,"COEF.PAR"] - beta[,"COEF.SIM"])^2)
+  mse_subset <- mean((beta.subset[,"COEF.PAR"] - beta.subset[,"COEF.SIM"])^2)
 
   #########################################
   #refit the model using the beta_simulated
@@ -74,8 +83,8 @@ validation_function <- function(df,
   x <- subset(df, select = -AE)
   y <- subset(df, select = AE)
 
-  keep_X <- simulation_list$DRUG #extract the column names from the simulation
-  keep_X <- keep_X[!keep_X == "(Intercept)"]
+  #extract non-zero covariates from simulation
+  keep_X <- simulation_list$DRUG[simulation_list$COEF != 0]
   x <- x[,keep_X] #extract the columns from the beta simulated
   new_data <- cbind(x, y)
   new_outcome <- coef(summary(glm(AE ~ ., data = new_data, family = "binomial"))) %>%
@@ -95,7 +104,8 @@ validation_function <- function(df,
   #########################################
   # Define the vector of column names to exclude
   not_select <- c("n_total", "TXGROUP.4", "TXGROUP.8", "TXGROUP.16",
-                  "SEX.F", "RACE.Black", "RACE.Hispanic", "RACE.Other")
+                  "SEX.F", "RACE.Black", "RACE.Hispanic", "RACE.Other",
+                  "AGE", "AE")
 
 
   # Subset the data frame to exclude the specified columns and transpose the result
@@ -118,24 +128,80 @@ validation_function <- function(df,
                        .))
 
   #print(beta_v1)
+
   #########################################
-  #calculate specificity
+  #calculate number of betas (not including intercept or demographics)
   #########################################
-  #how many times does parameter_list != 0
+  #select drug and drug interactions from original dataframe
+  b <- colnames(df)[!( colnames(df) %in% not_select)]
+
+  #calculate length
+  beta_num <- length(b)
+
+  #select drugs only from original dataframe
+  beta_num_d <- length(b[!grepl("_", b)])
+
+  #select drug interactions only from original dataframe
+  beta_num_i <- length(b[grepl("_", b)])
+
+  #########################################
+  #calculate specificity (overall)
+  #########################################
+  #how many times does parameter_list == 0
   denom_spec <- beta_num - sum(ifelse(beta_v1[,"COEF.PAR"] != 0, 1, 0))
 
   #how many times does simulated beta != 0 but parameter_list == 0
-  num_spec <- denom_spec - sum(ifelse(beta_v1[,"COEF.PAR"] == 0 & beta_v1[,"COEF.SIM"] != 0, 1, 0))
+  num_spec <- denom_spec - sum(ifelse(beta_v1[,"COEF.PAR"] == 0 &
+                                        beta_v1[,"COEF.SIM"] != 0, 1, 0))
 
   #calculate specificity
   if(denom_spec != 0) {
     specificity <- num_spec/denom_spec
   } else{
-    specificity = 1
+    specificity = NA
   }
 
   #########################################
-  #calculate sensitivity
+  #calculate specificity (drug)
+  #########################################
+  #extract only the drugs
+  beta_d <- beta_v1[!grepl("_", beta_v1$DRUG), ]
+
+  #how many times does parameter_list == 0
+  denom_spec_d <- beta_num_d - sum(ifelse(beta_d[,"COEF.PAR"] != 0, 1, 0))
+
+  #how many times does simulated beta != 0 but parameter_list == 0
+  num_spec_d <- denom_spec_d - sum(ifelse(beta_d[,"COEF.PAR"] == 0
+                                          & beta_d[,"COEF.SIM"] != 0, 1, 0))
+
+  #calculate specificity
+  if(denom_spec_d != 0) {
+    specificity_d <- num_spec_d/denom_spec_d
+  } else{
+    specificity_d = NA
+  }
+
+  #########################################
+  #calculate specificity (drug-interaction)
+  #########################################
+  #extract only the drugs interactions
+  beta_i <- beta_v1[grepl("_", beta_v1$DRUG), ]
+
+  #how many times does parameter_list == 0
+  denom_spec_i <- beta_num_i - sum(ifelse(beta_i[,"COEF.PAR"] != 0, 1, 0))
+
+  #how many times does simulated beta != 0 but parameter_list == 0
+  num_spec_i <- denom_spec_i - sum(ifelse(beta_i[,"COEF.PAR"] == 0 & beta_i[,"COEF.SIM"] != 0, 1, 0))
+
+  #calculate specificity
+  if(denom_spec != 0) {
+    specificity_i <- num_spec_i/denom_spec_i
+  } else{
+    specificity_i = NA
+  }
+
+  #########################################
+  #calculate sensitivity (overall)
   #########################################
   #how parameters specified in the model
   denom_sen <- sum(ifelse(beta_v1[,"COEF.PAR"] != 0, 1, 0))
@@ -147,11 +213,47 @@ validation_function <- function(df,
   if(denom_sen != 0) {
     sensitivity <- num_sen/denom_sen
   } else{
-    sensitivity = 0
+    sensitivity = NA
   }
 
 
+  #########################################
+  #calculate sensitivity (drugs)
+  #########################################
+  #how parameters specified in the model
+  denom_sen_d <- sum(ifelse(beta_d[,"COEF.PAR"] != 0, 1, 0))
+
+  #how many times do both simulated beta and parameter_list != 0
+  num_sen_d <- sum(ifelse(beta_d[,"COEF.PAR"] != 0 & beta_d[,"COEF.SIM"] != 0, 1, 0))
+
+  #calculate sensitivity
+  if(denom_sen_d != 0) {
+    sensitivity_d <- num_sen_d/denom_sen_d
+  } else{
+    sensitivity_d = NA
+  }
+
+  #########################################
+  #calculate sensitivity (drugs-interactions)
+  #########################################
+  #how parameters specified in the model
+  denom_sen_i <- sum(ifelse(beta_i[,"COEF.PAR"] != 0, 1, 0))
+
+  #how many times do both simulated beta and parameter_list != 0
+  num_sen_i <- sum(ifelse(beta_i[,"COEF.PAR"] != 0 & beta_i[,"COEF.SIM"] != 0, 1, 0))
+
+  #calculate sensitivity
+  if(denom_sen_i != 0) {
+    sensitivity_i <- num_sen_i/denom_sen_i
+  } else{
+    sensitivity_i = NA
+  }
+
+  #########################################
   #output
-  output <- data.frame(mse, specificity, sensitivity)
+  #########################################
+  output <- data.frame(mse_all, mse_subset,
+                       specificity_d, specificity_i, specificity,
+                       sensitivity_d, sensitivity_i, sensitivity)
   output
 }

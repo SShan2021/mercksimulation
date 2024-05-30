@@ -4,7 +4,14 @@
 \alias{penalized_regression}
 \title{Model Selection Using Ridge, LASSO, Elastic Net}
 \usage{
-penalized_regression(df, family.value = "binomial", model.type = "lasso")
+penalized_regression(
+  df,
+  family.value = "binomial",
+  model.type = "lasso",
+  max_lambda = 10,
+  method = "CV",
+  opt_lambda = "min"
+)
 }
 \arguments{
 \item{df}{The dataset with the predictors and outcome.}
@@ -14,6 +21,14 @@ The default is family.value = "binomial".}
 
 \item{model.type}{Specifies which model we're trying to run.
 Possible values: "lasso", "ridge", "elastic net"}
+
+\item{max_lambda}{Specifies the maximum lambda considered for LASSO.
+Default is 10}
+
+\item{method}{Specifies which method to use for LASSO. Default is CV.}
+
+\item{opt_lambda}{Specifies which lambda from CV you want to use for final
+model. Default is min.}
 }
 \value{
 Returns the coefficient dataframe for the dataset.
