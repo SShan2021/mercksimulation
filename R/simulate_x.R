@@ -77,6 +77,7 @@ simulate_x <- function(demographic_list,
   #create the drug interactions
   #######################
   #Calculate the number of interaction terms
+  d <- length(drug_list)
   num_interactions <- choose(d, 2)
 
   #Initialize an empty data frame to store the interaction terms
