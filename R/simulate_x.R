@@ -67,8 +67,7 @@ simulate_x <- function(demographic_list,
   #######################
   #simulate drugs
   #######################
-  d <- length(drug_list)
-  drugs_simulated <- mvrnorm(n = d, mu = mean_vec, Sigma = covariance_matrix)
+  drugs_simulated <- mvrnorm(n = n, mu = mean_vec, Sigma = covariance_matrix)
   colnames(drugs_simulated) <- drug_list
 
   #Make all the values below the threshold 0:
@@ -81,7 +80,7 @@ simulate_x <- function(demographic_list,
   num_interactions <- choose(d, 2)
 
   #Initialize an empty data frame to store the interaction terms
-  interaction_df <- matrix(NA, nrow = n, ncol = num_interactions)
+  interaction_df <- matrix(NA, nrow = nrow(drugs_simulated), ncol = num_interactions)
 
   #Initialize a vector to store column names
   interaction_colnames <- character(num_interactions)
