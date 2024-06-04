@@ -115,7 +115,7 @@ simulation_function_v1 <- function(parameter_list,
       # Convert method to data frames and add method identifiers
       #####################
       method1_df <- as.data.frame(as.matrix(method1))
-      model1_df$method <- "method1"
+      method1_df$method <- "method1"
 
       method2_df <- as.data.frame(as.matrix(method2))
       method2_df$method <- "method2"
