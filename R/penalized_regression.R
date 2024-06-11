@@ -119,7 +119,7 @@ penalized_regression <- function(df,
         #####################
         if(current_deviance < best_deviance){
           best_deviance <- current_deviance
-          best_alpha <- alpha.value[j]
+          best_alpha <- alpha.value[i]
         }
       }
       #####################

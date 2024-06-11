@@ -183,7 +183,7 @@ simulation_function_v1 <- function(parameter_list,
       #####################
       # Write the data frame to the corresponding file
       #####################
-      write.table(validation_results, file = file_conns[[2]], sep = ",", col.names = NA,
+      write.table(validation_results, file = file_conns[[2]], sep = ",", col.names = FALSE,
                   append = TRUE, quote = FALSE, row.names = TRUE)
 
       #####################
